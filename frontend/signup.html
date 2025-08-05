@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign Up - Your App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 12px;
+        }
+
+        .logo-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            letter-spacing: -0.5px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            flex: none;
+            width: 100%;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input:hover, .form-select:hover {
+            border-color: #667eea;
+        }
+
+        .gender-options {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .radio-option label {
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .subjects-container {
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 14px 16px;
+            min-height: 120px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .subjects-container:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .subjects-dropdown {
+            width: 100%;
+            padding: 8px 0;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .subjects-dropdown:focus {
+            outline: none;
+        }
+
+        .selected-subjects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .subject-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: tagAppear 0.3s ease-out;
+        }
+
+        @keyframes tagAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .subject-tag .remove-tag {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            transition: background 0.2s ease;
+        }
+
+        .subject-tag .remove-tag:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .subjects-limit {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .subjects-limit.warning {
+            color: #e74c3c;
+        }
+
+        .register-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .register-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .register-button:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e1e5e9;
+            z-index: 1;
+        }
+
+        .divider span {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .gender-options {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo">
+            <img src="assets/images/logo_.png" alt="Logo" class="logo-image" />
+            <div class="logo-text">George Silundika Student Management System</div>
+        </div>
+
+        <form id="signupForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name" class="form-label">Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-input" 
+                        placeholder="Enter your name"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="surname" class="form-label">Surname</label>
+                    <input 
+                        type="text" 
+                        id="surname" 
+                        name="surname" 
+                        class="form-input" 
+                        placeholder="Enter your surname"
+                        required
+                    />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="Enter your email"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="confirmEmail" class="form-label">Confirm Email</label>
+                    <input 
+                        type="email" 
+                        id="confirmEmail" 
+                        name="confirmEmail" 
+                        class="form-input" 
+                        placeholder="Confirm your email"
+                        required
+                    />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        class="form-input" 
+                        placeholder="Confirm your password"
+                        required
+                    />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        class="form-input" 
+                        placeholder="Enter your phone number"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input 
+                        type="date" 
+                        id="dob" 
+                        name="dob" 
+                        class="form-input"
+                        required
+                    />
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label class="form-label">Gender</label>
+                <div class="gender-options">
+                    <div class="radio-option">
+                        <input type="radio" id="male" name="gender" value="male" required />
+                        <label for="male">Male</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="female" name="gender" value="female" required />
+                        <label for="female">Female</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="address" class="form-label">Address</label>
+                <textarea 
+                    id="address" 
+                    name="address" 
+                    class="form-input" 
+                    placeholder="Enter your address"
+                    rows="3"
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="class" class="form-label">Class</label>
+                <select id="class" name="class" class="form-select" required>
+                    <option value="">Select your class</option>
+                    <option value="2">Sciences</option>
+                    <option value="1">Arts</option>
+                    <option value="3">Commercials</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label class="form-label">Subjects (Select up to 6)</label>
+                <div class="subjects-container">
+                    <select class="subjects-dropdown" id="subjectsDropdown">
+                        <option value="">Select a subject to add...</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Geography">Geography</option>
+                        <option value="History">History</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="English">English</option>
+                        <option value="Literature">Literature</option>
+                        <option value="Economics">Economics</option>
+                        <option value="Business Studies">Business Studies</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Art">Art</option>
+                    </select>
+                    <div class="selected-subjects" id="selectedSubjects"></div>
+                    <div class="subjects-limit" id="subjectsLimit">0/6 subjects selected</div>
+                </div>
+            </div>
+
+            <button type="button" class="register-button" onclick="handleSubmit(event)">
+                Register
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>or</span>
+        </div>
+
+        <div style="text-align: center; color: #888; font-size: 14px;">
+            Already have an account? 
+            <a href="/login" style="color: #667eea; text-decoration: none; font-weight: 500;">Sign in</a>
+        </div>
+    </div>
+
+    <script>
+      // Global array to track selected subjects
+      let selectedSubjects = [];
+      const maxSubjects = 6;
+
+      // Cache DOM elements
+      const subjectsDropdown = document.getElementById('subjectsDropdown');
+      const selectedSubjectsContainer = document.getElementById('selectedSubjects');
+      const subjectsLimitText = document.getElementById('subjectsLimit');
+      const form = document.getElementById('signupForm');
+
+      // Subject dropdown change event
+      subjectsDropdown.addEventListener('change', () => {
+        const selected = subjectsDropdown.value;
+        if (selected && !selectedSubjects.includes(selected) && selectedSubjects.length < maxSubjects) {
+          selectedSubjects.push(selected);
+          renderSelectedSubjects();
+          updateDropdownOptions();
+        }
+        subjectsDropdown.value = '';
+      });
+
+      // Render selected subjects as tags with remove buttons
+      function renderSelectedSubjects() {
+        selectedSubjectsContainer.innerHTML = '';
+        selectedSubjects.forEach(subject => {
+          const tag = document.createElement('div');
+          tag.className = 'subject-tag';
+          tag.innerHTML = `
+            ${subject}
+            <button type="button" class="remove-tag" aria-label="Remove subject ${subject}" onclick="removeSubject('${subject}')">×</button>
+          `;
+          selectedSubjectsContainer.appendChild(tag);
+        });
+
+        subjectsLimitText.textContent = `${selectedSubjects.length}/${maxSubjects} subjects selected`;
+        subjectsLimitText.className = selectedSubjects.length >= maxSubjects ? 'subjects-limit warning' : 'subjects-limit';
+      }
+
+      // Update dropdown options to disable already selected subjects or if limit reached
+      function updateDropdownOptions() {
+        const options = subjectsDropdown.querySelectorAll('option');
+        options.forEach(option => {
+          if (option.value) {
+            option.disabled = selectedSubjects.includes(option.value) || selectedSubjects.length >= maxSubjects;
+          }
+        });
+      }
+
+      // Remove a subject from the selectedSubjects array
+      function removeSubject(subject) {
+        selectedSubjects = selectedSubjects.filter(s => s !== subject);
+        renderSelectedSubjects();
+        updateDropdownOptions();
+      }
+
+      // Submit handler called from the button onclick
+      function handleSubmit(event) {
+        event.preventDefault(); // prevent form from submitting normally
+
+        // Collect form data
+        const formData = new FormData(form);
+        const data = {
+          name: formData.get('name'),
+          surname: formData.get('surname'),
+          email: formData.get('email'),
+          confirmEmail: formData.get('confirmEmail'),
+          password: formData.get('password'),
+          confirmPassword: formData.get('confirmPassword'),
+          phone: formData.get('phone'),
+          dob: formData.get('dob'),
+          gender: formData.get('gender'),
+          address: formData.get('address'),
+          class: formData.get('class'),
+          selectedSubjects // uses global selectedSubjects
+        };
+
+        // Basic validations
+        if (data.email !== data.confirmEmail) {
+          alert('Email addresses do not match.');
+          return;
+        }
+        if (data.password !== data.confirmPassword) {
+          alert('Passwords do not match.');
+          return;
+        }
+        if (selectedSubjects.length === 0) {
+          alert('Please select at least one subject.');
+          return;
+        }
+
+        // Send POST request to backend
+        fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+        if (result.redirect) {
+            window.location.href = result.redirect; // Redirect to the appropriate page
+        } else if (result.message) {
+            alert(result.message); // Optionally alert on success
+        } else if (result.error) {
+            alert(result.error);   // Show error if any
+        }
+        })
+        .catch(() => alert('Something went wrong. Please try again.'));
+
+      }
+
+      // Add focus hover effects to inputs and selects
+      const inputs = document.querySelectorAll('.form-input, .form-select');
+      inputs.forEach(input => {
+        input.addEventListener('focus', () => {
+          input.parentElement.style.transform = 'translateY(-2px)';
+        });
+        input.addEventListener('blur', () => {
+          input.parentElement.style.transform = 'translateY(0)';
+        });
+      });
+
+      // Initialize subject UI on page load
+      renderSelectedSubjects();
+      updateDropdownOptions();
+    </script>
+</body>
+</html>

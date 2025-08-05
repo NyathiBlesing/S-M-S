@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>George Silunika Student Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-content {
+            flex: 1;
+        }
+
+        .logout-section {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 2px solid #34495e;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logout-btn:hover {
+            background-color: #34495e;
+        }
+
+        .system-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid #34495e;
+            padding-bottom: 15px;
+        }
+
+        .nav-item {
+            padding: 15px 20px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: #34495e;
+        }
+
+        .nav-item.active {
+            background-color: #3498db;
+            border-left-color: #2980b9;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background-color: white;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .welcome-header {
+            font-size: 48px;
+            color: #2c3e50;
+            text-align: left;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .typewriter-text {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .dashboard-background {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%233498db;stop-opacity:0.1"/><stop offset="100%" style="stop-color:%239b59b6;stop-opacity:0.1"/></linearGradient></defs><rect width="1000" height="600" fill="url(%23bg)"/><g fill="%23ecf0f1" opacity="0.5"><circle cx="100" cy="100" r="50"/><circle cx="900" cy="500" r="70"/><circle cx="800" cy="100" r="40"/><circle cx="200" cy="450" r="60"/><rect x="400" y="200" width="200" height="200" rx="20"/><polygon points="700,250 750,200 800,250 750,300"/></g></svg>');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group label {
+            width: 120px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:disabled,
+        .form-group select:disabled {
+            background-color: #ecf0f1;
+            color: #7f8c8d;
+            cursor: not-allowed;
+            border-color: #bdc3c7;
+        }
+
+        .dormitory-map {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .hostel-block {
+            width: 120px;
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .hostel-block:hover {
+            transform: scale(1.05);
+        }
+
+        .hostel-available {
+            background-color: #95a5a6;
+        }
+
+        .hostel-assigned {
+            background-color: #27ae60;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .status-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .status-pending {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .status-registered {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .status-denied {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .subjects-list {
+            background-color: #ecf0f1;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .subjects-list h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .subject-item {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .dormitory-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .dormitory-assigned {
+            background-color: #27ae60;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .dormitory-not-assigned {
+            background-color: #95a5a6;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <div class="system-title">George Silunika<br>Student Management System</div>
+            <div class="nav-item active" onclick="showSection('dashboard')">
+                📊 Dashboard
+            </div>
+            <div class="nav-item" onclick="showSection('student-details')">
+                👤 Student Details
+            </div>
+            <div class="nav-item" onclick="showSection('registration')">
+                📋 Registration Status
+            </div>
+            <div class="nav-item" onclick="showSection('subjects')">
+                📚 Subjects
+            </div>
+            <div class="nav-item" onclick="showSection('dormitory')">
+                🏠 Dormitory
+            </div>
+        </div>
+        <div class="logout-section">
+            <button class="logout-btn" onclick="logout()">
+                🚪 Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section active">
+            <div class="dashboard-background">
+                <div class="welcome-header">
+                    <div class="typewriter-text" id="welcomeText"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Details Section -->
+        <div id="student-details" class="content-section">
+            <div class="section-title">Student Details</div>
+            <form>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="George" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="surname">Surname:</label>
+                    <input type="text" id="surname" name="surname" value="Silunika" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="george.silunika@university.edu" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" name="phone" value="+263 77 123 4567" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="dob">DOB:</label>
+                    <input type="date" id="dob" name="dob" value="2001-05-15" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" name="gender" value="unstated" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" value="123 University Avenue, Harare" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="class">Class:</label>
+                    <input type="text" id="class" name="class" value="Computer Science - Year 3" disabled>
+                </div>
+            </form>
+        </div>
+
+        <!-- Registration Status Section -->
+        <div id="registration" class="content-section">
+            <div class="section-title">Registration Status</div>
+            <div class="status-container">
+                <div class="status-badge status-pending">⏳ Pending</div>
+                <div style="margin: 20px 0; color: #7f8c8d;">
+                    <p>Alternative states:</p>
+                </div>
+                <div class="status-badge status-registered">✅ Registered</div>
+                <div class="status-badge status-denied">❌ Denied</div>
+            </div>
+        </div>
+
+        <!-- Subjects Section -->
+        <div id="subjects" class="content-section">
+            <div class="section-title">Subjects Registered</div>
+            <div class="subjects-list">
+                <h3>Your Registered Subjects:</h3>
+                <div class="subject-item">📖 English</div>
+                <div class="subject-item">🔢 Mathematics</div>
+                <div class="subject-item">⚛️ Physics</div>
+                <div class="subject-item">🧪 Chemistry</div>
+                <div class="subject-item">💰 Economics</div>
+            </div>
+        </div>
+
+        <!-- Dormitory Section -->
+        <div id="dormitory" class="content-section">
+            <div class="section-title">Dormitory Assignment</div>
+            <div class="dormitory-container">
+                <div class="dormitory-assigned">🏠 Assigned: Hostel 4</div>
+                
+                <div class="dormitory-map">
+                    <div class="hostel-block hostel-available">Hostel 1</div>
+                    <div class="hostel-block hostel-available">Hostel 2</div>
+                    <div class="hostel-block hostel-available">Hostel 3</div>
+                    <div class="hostel-block hostel-assigned">Hostel 4</div>
+                </div>
+                
+                <div style="margin: 20px 0; color: #7f8c8d;">
+                    <p>Alternative state:</p>
+                </div>
+                <div class="dormitory-not-assigned">❌ Not Assigned</div>
+            </div>
+        </div>
+    </div>
+
+  <script>
+    let studentData = {};
+    let subjectsList = [];
+    let assignedHostel = null;
+
+    async function fetchDashboardData() {
+      try {
+        const [userRes, subjectsRes] = await Promise.all([
+          fetch('/me'),
+          fetch('/subjects')
+        ]);
+
+        if (!userRes.ok || !subjectsRes.ok) {
+          throw new Error("Session expired or data failed to load.");
+        }
+
+        studentData = await userRes.json();
+        subjectsList = await subjectsRes.json();
+        assignedHostel = studentData.dormitory_id || null;
+
+        updateStudentDetails();
+        updateSubjectsList();
+        updateDormitoryDisplay();
+        updateStatusDisplay();
+        startTypewriterAnimation();
+      } catch (err) {
+        console.error('Dashboard load error:', err);
+        alert("You are not logged in. Redirecting to login...");
+        window.location.href = '/login';
+      }
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      event.target.classList.add('active');
+
+      if (sectionId === 'student-details') updateStudentDetails();
+      else if (sectionId === 'subjects') updateSubjectsList();
+      else if (sectionId === 'dormitory') updateDormitoryDisplay();
+      else if (sectionId === 'registration') updateStatusDisplay();
+      else if (sectionId === 'dashboard') startTypewriterAnimation();
+    }
+
+    function updateStudentDetails() {
+      document.getElementById('name').value = studentData.name || '';
+      document.getElementById('surname').value = studentData.surname || '';
+      document.getElementById('email').value = studentData.email || '';
+      document.getElementById('phone').value = studentData.phone || '';
+      document.getElementById('dob').value = studentData.dob || '';
+      document.getElementById('gender').value = studentData.gender || '';
+      document.getElementById('address').value = studentData.address || '';
+      document.getElementById('class').value = studentData.class || '';
+    }
+
+    function updateSubjectsList() {
+      const container = document.querySelector('.subjects-list');
+      container.innerHTML = '<h3>Your Registered Subjects:</h3>';
+      subjectsList.forEach(subject => {
+        const div = document.createElement('div');
+        div.className = 'subject-item';
+        div.textContent = subject;
+        container.appendChild(div);
+      });
+    }
+
+    function updateDormitoryDisplay() {
+      const assignedText = document.querySelector('.dormitory-assigned');
+      const notAssignedText = document.querySelector('.dormitory-not-assigned');
+      const hostelBlocks = document.querySelectorAll('.hostel-block');
+
+      if (assignedHostel && assignedHostel >= 1 && assignedHostel <= 4) {
+        assignedText.innerHTML = `🏠 Assigned: Hostel ${assignedHostel}`;
+        assignedText.style.display = 'inline-block';
+        notAssignedText.style.display = 'none';
+        hostelBlocks.forEach((block, index) => {
+          block.className = index + 1 === assignedHostel
+            ? 'hostel-block hostel-assigned'
+            : 'hostel-block hostel-available';
+        });
+      } else {
+        assignedText.style.display = 'none';
+        notAssignedText.style.display = 'inline-block';
+        hostelBlocks.forEach(block => {
+          block.className = 'hostel-block hostel-available';
+        });
+      }
+    }
+
+    function updateStatusDisplay() {
+      const container = document.querySelector('.status-container');
+      container.innerHTML = '';
+      const badge = document.createElement('div');
+      badge.className = 'status-badge';
+
+      if (studentData.status === 'active') {
+        badge.classList.add('status-registered');
+        badge.textContent = '✅ Registered';
+      } else if (studentData.status === 'pending') {
+        badge.classList.add('status-pending');
+        badge.textContent = '⏳ Pending';
+      } else {
+        badge.classList.add('status-denied');
+        badge.textContent = '❌ Denied';
+      }
+
+      container.appendChild(badge);
+    }
+
+    function startTypewriterAnimation() {
+      const welcomeText = document.getElementById('welcomeText');
+      welcomeText.textContent = '';
+      welcomeText.style.width = '0';
+
+      const msg = `Welcome ${studentData.name || ''} ${studentData.surname || ''}`;
+      setTimeout(() => {
+        welcomeText.textContent = msg;
+        welcomeText.style.animation = 'typing 3s steps(30, end)';
+        setTimeout(() => {
+          welcomeText.style.animation = 'none';
+          welcomeText.style.width = 'auto';
+          welcomeText.style.overflow = 'visible';
+        }, 3000);
+      }, 100);
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        fetch('/logout')
+          .then(res => res.json())
+          .then(data => {
+            alert(data.message);
+            window.location.href = '/login';
+          })
+          .catch(err => {
+            console.error('Logout error:', err);
+            alert("Logout failed.");
+          });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchDashboardData);
+  </script>
+</body>
+</html>
