@@ -248,6 +248,118 @@ app.get('/dormitory', (req, res) => {
   res.json({ assignedHostel });
 });
 
+// Add these routes BELOW your current imports and middleware
+
+// 1. Get all students (role='student')
+app.get('/students', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
+
+  const sql = `
+    SELECT u.user_id, u.name, u.surname, u.gender, c.class_name, d.dormitory_name, u.status
+    FROM users u
+    LEFT JOIN classes c ON u.class_id = c.class_id
+    LEFT JOIN dormitories d ON u.dormitory_id = d.dormitory_id
+    WHERE u.role = 'student'
+  `;
+
+  try {
+    const [rows] = await db.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching students:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// 2. Get active students (status = 'active')
+app.get('/students/active', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
+
+  const sql = `SELECT user_id, name, surname, gender, status FROM users WHERE role='student' AND status='active'`;
+
+  try {
+    const [rows] = await db.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching active students:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// 3. Get inactive students (status = 'denied')
+app.get('/students/inactive', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
+
+  const sql = `SELECT user_id, name, surname, gender, status FROM users WHERE role='student' AND status='denied'`;
+
+  try {
+    const [rows] = await db.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching inactive students:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// 4. Get student stats
+app.get('/students/stats', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
+
+  const sql = `
+    SELECT 
+      COUNT(*) AS total,
+      SUM(gender = 'Male') AS male,
+      SUM(gender = 'Female') AS female,
+      SUM(status = 'active') AS active,
+      SUM(status = 'denied') AS inactive
+    FROM users WHERE role = 'student'
+  `;
+
+  try {
+    const [rows] = await db.query(sql);
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Error fetching student stats:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// 5. Get all subjects
+app.get('/subjects', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
+
+  const sql = `SELECT subject_id, subject_name FROM subjects`;
+
+  try {
+    const [rows] = await db.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching subjects:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// 6. Get dormitory students
+app.get('/dormitory', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
+
+  const sql = `
+    SELECT u.user_id, u.name, u.surname, c.class_name, d.dormitory_name 
+    FROM users u
+    LEFT JOIN dormitories d ON u.dormitory_id = d.dormitory_id
+    LEFT JOIN classes c ON u.class_id = c.class_id
+    WHERE u.role = 'student'
+  `;
+
+  try {
+    const [rows] = await db.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching dormitory students:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
 
 // Define port
 const PORT = process.env.PORT || 5000;

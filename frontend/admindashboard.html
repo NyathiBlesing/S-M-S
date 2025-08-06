@@ -642,6 +642,7 @@
         // VARIABLES SECTION
         // ================================
         
+        /*
         // Total counts
         const TOTAL_REGISTERED = 120;
         const MALE_COUNT = 72;
@@ -651,11 +652,11 @@
 
         // Registered Students List
         const REGISTERED_STUDENTS = [
-            { name: 'John Smith', program: 'Computer Science', gender: 'male' },
-            { name: 'Sarah Johnson', program: 'Engineering', gender: 'female' },
-            { name: 'Mike Davis', program: 'Business', gender: 'male' },
-            { name: 'Emily Wilson', program: 'Mathematics', gender: 'female' },
-            { name: 'James Brown', program: 'Physics', gender: 'male' }
+            { name: 'John Smith', class: 'Computer Science', gender: 'male' },
+            { name: 'Sarah Johnson', class: 'Engineering', gender: 'female' },
+            { name: 'Mike Davis', class: 'Business', gender: 'male' },
+            { name: 'Emily Wilson', class: 'Mathematics', gender: 'female' },
+            { name: 'James Brown', class: 'Physics', gender: 'male' }
         ];
 
         // Active Students List
@@ -692,6 +693,126 @@
             { name: 'Lisa', surname: 'Garcia', class: '2nd Year CS', hostel: null },
             { name: 'Alex', surname: 'Thompson', class: '3rd Year Eng', hostel: 4 }
         ];
+            */
+        //----------------------------------------------------------------------------------------------------------------------------
+
+                // Initialize variables
+        let TOTAL_REGISTERED = 0;
+        let MALE_COUNT = 0;
+        let FEMALE_COUNT = 0;
+        let ACTIVE_COUNT = 0;
+        let INACTIVE_COUNT = 0;
+
+        let REGISTERED_STUDENTS = [];
+        let ACTIVE_STUDENTS = [];
+        let INACTIVE_STUDENTS = [];
+        let SUBJECTS = [];
+        let DORMITORY_STUDENTS = [];
+
+        // Fetch student stats
+        async function fetchStudentStats() {
+        try {
+            const res = await fetch('/students/stats', { credentials: 'include' });
+            if (!res.ok) throw new Error('Failed to fetch student stats');
+            const stats = await res.json();
+
+            console.log("check18: " + stats.total)
+
+            TOTAL_REGISTERED = stats.total || 0;
+            MALE_COUNT = stats.male || 0;
+            FEMALE_COUNT = stats.female || 0;
+            ACTIVE_COUNT = stats.active || 0;
+            INACTIVE_COUNT = stats.inactive || 0;
+
+            console.log('Student stats:', stats);
+        } catch (error) {
+            console.error(error);
+        }
+        }
+
+        // Fetch all registered students
+        async function fetchRegisteredStudents() {
+        try {
+            const res = await fetch('/students', { credentials: 'include' });
+            if (!res.ok) throw new Error('Failed to fetch registered students');
+            REGISTERED_STUDENTS = await res.json();
+            console.log('Registered students:', REGISTERED_STUDENTS);
+        } catch (error) {
+            console.error(error);
+        }
+        }
+
+        // Fetch active students
+        async function fetchActiveStudents() {
+        try {
+            const res = await fetch('/students/active', { credentials: 'include' });
+            if (!res.ok) throw new Error('Failed to fetch active students');
+            ACTIVE_STUDENTS = await res.json();
+            console.log('Active students:', ACTIVE_STUDENTS);
+        } catch (error) {
+            console.error(error);
+        }
+        }
+
+        // Fetch inactive students
+        async function fetchInactiveStudents() {
+        try {
+            const res = await fetch('/students/inactive', { credentials: 'include' });
+            if (!res.ok) throw new Error('Failed to fetch inactive students');
+            INACTIVE_STUDENTS = await res.json();
+            console.log('Inactive students:', INACTIVE_STUDENTS);
+        } catch (error) {
+            console.error(error);
+        }
+        }
+
+        // Fetch subjects
+        async function fetchSubjects() {
+        try {
+            const res = await fetch('/subjects', { credentials: 'include' });
+            if (!res.ok) throw new Error('Failed to fetch subjects');
+            SUBJECTS = await res.json();
+            console.log('Subjects:', SUBJECTS);
+        } catch (error) {
+            console.error(error);
+        }
+        }
+
+        // Fetch dormitory students
+        async function fetchDormitoryStudents() {
+        try {
+            const res = await fetch('/dormitory', { credentials: 'include' });
+            if (!res.ok) throw new Error('Failed to fetch dormitory students');
+            DORMITORY_STUDENTS = await res.json();
+            console.log('Dormitory students:', DORMITORY_STUDENTS);
+        } catch (error) {
+            console.error(error);
+        }
+        }
+
+        // Call all fetch functions
+        async function loadAllData() {
+        await Promise.all([
+            fetchStudentStats(),
+            fetchRegisteredStudents(),
+            fetchActiveStudents(),
+            fetchInactiveStudents(),
+            fetchSubjects(),
+            fetchDormitoryStudents()
+        ]);
+        
+        // After loading all, you can update your UI or console log all data
+        console.log({ 
+            TOTAL_REGISTERED, MALE_COUNT, FEMALE_COUNT, ACTIVE_COUNT, INACTIVE_COUNT,
+            REGISTERED_STUDENTS, ACTIVE_STUDENTS, INACTIVE_STUDENTS, SUBJECTS, DORMITORY_STUDENTS
+        });
+
+        // TODO: Update your DOM/UI here using the fetched data
+        }
+
+        // Start fetching data on page load or script run
+        loadAllData();
+
 
         // ================================
         // INITIALIZATION AND RENDERING
@@ -712,6 +833,7 @@
             document.getElementById('total-registered').textContent = TOTAL_REGISTERED;
             document.getElementById('male-count').textContent = MALE_COUNT;
             document.getElementById('female-count').textContent = FEMALE_COUNT;
+            console.log("check1: " + TOTAL_REGISTERED)
             document.getElementById('active-count').textContent = ACTIVE_COUNT;
             document.getElementById('inactive-count').textContent = INACTIVE_COUNT;
         }
@@ -730,7 +852,7 @@
                 <div class="student-item">
                     <div class="student-info">
                         <div class="student-name">${student.name}</div>
-                        <div class="student-details">Program: ${student.program}</div>
+                        <div class="student-details">Program: ${student.class}</div>
                     </div>
                     <button class="btn btn-danger" onclick="removeStudent(${index})">Remove</button>
                 </div>
