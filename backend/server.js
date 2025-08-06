@@ -13,7 +13,7 @@ function capitalizeFirst(str) {
 dotenv.config();
 
 const app = express();
-const db = require('./db');
+const db = require('./db'); 
 
 // Middleware
 app.use(cors({
