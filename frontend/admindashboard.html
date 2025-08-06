@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Styrene+B:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Styrene B', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 20px 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            color: #ecf0f1;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .system-icon {
+            width: 24px;
+            height: 24px;
+            background: url('assets/images/logo_.png') no-repeat center;
+            background-size: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .nav-tabs {
+            flex: 1;
+        }
+
+        .nav-tab {
+            display: block;
+            width: 100%;
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .nav-tab.active {
+            background: rgba(255,255,255,0.15);
+            border-left: 4px solid #e74c3c;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            margin: 20px 20px 0 20px;
+            padding: 12px 20px;
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .logout-icon {
+            font-size: 16px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: #f8f9fa;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-section {
+            text-align: center;
+            background: linear-gradient(rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.7)), 
+                        url('assets/images/adminphoto.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 80px 40px;
+            border-radius: 15px;
+            margin: 50px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .student-details-bg {
+            background: linear-gradient(rgba(248, 249, 250, 0.95), rgba(248, 249, 250, 0)), 
+                        url('assets/images/adminphoto.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: calc(100vh - 60px);
+            padding: 0;
+        }
+
+        .welcome-section h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #229954;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #c0392b;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover:not(:disabled) {
+            background: #e67e22;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #3498db;
+        }
+
+        .student-list {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .student-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .student-details {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .subject-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .subject-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .dormitory-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .dormitory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .dormitory-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dormitory-item:last-child {
+            border-bottom: none;
+        }
+
+        .dormitory-student-info {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .hostel-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .hostel-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hostel-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+
+        .hostel-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .hostel-btn {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .hostel-btn:hover {
+            border-color: #3498db;
+        }
+
+        .hostel-btn.selected {
+            background: #27ae60;
+            border-color: #27ae60;
+            color: white;
+        }
+
+        .deallocate-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .pie-chart {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#3498db 0deg 216deg, #e74c3c 216deg 360deg);
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .pie-chart::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .pie-chart-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #2c3e50;
+            z-index: 1;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .sender-outbound {
+            background: #17a2b8;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>
+                <div class="system-icon"></div>
+                Student Management System
+            </h2>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('welcome')">Welcome</button>
+                <button class="nav-tab" onclick="showSection('registered-students')">Registered Students</button>
+                <button class="nav-tab" onclick="showSection('student-details')">Student Details Management</button>
+                <button class="nav-tab" onclick="showSection('subject-management')">Subject Management</button>
+                <button class="nav-tab" onclick="showSection('active-students')">Active Students</button>
+                <button class="nav-tab" onclick="showSection('inactive-students')">Inactive Students</button>
+                <button class="nav-tab" onclick="showSection('dormitory-allocation')">Dormitory Allocation</button>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">
+                <span class="logout-icon">🚪</span>
+                Logout
+            </button>
+        </div>
+
+        <div class="main-content">
+            <!-- Welcome Section -->
+            <div id="welcome" class="content-section active">
+                <div class="welcome-section">
+                    <h1>WELCOME ADMIN!</h1>
+                    <p>Manage your institution's student data efficiently</p>
+                </div>
+            </div>
+
+            <!-- Registered Students Section -->
+            <div id="registered-students" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Signed up Students</h2>
+                    <!--div class="action-buttons">
+                        <span class="sender-outbound">SENDER OUTBOUND</span>
+                    </div-->
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-registered">120</div>
+                        <div class="stat-label">Total Registered</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label" style="margin-bottom: 15px;">Gender Distribution</div>
+                        <div class="pie-chart">
+                            <div class="pie-chart-label">
+                                <div>Male: <span id="male-count">72</span></div>
+                                <div>Female: <span id="female-count">48</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search students..." id="registered-search">
+                </div-->
+
+                <div class="student-list" id="registered-list">
+                    <!-- Students will be populated here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Student Details Management Section -->
+            <div id="student-details" class="content-section student-details-bg">
+                <div style="padding: 30px;">
+                    <div class="section-header">
+                        <h2 class="section-title">Student Details Management</h2>
+                    </div>
+                    
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search student details...">
+                        <button class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject Management Section -->
+            <div id="subject-management" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Subject Management</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-success">ADD</button>
+                        <button class="btn btn-danger">DELETE</button>
+                    </div>
+                </div>
+
+                <div class="subject-grid" id="subject-grid">
+                    <!-- Subjects will be populated here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Active Students Section -->
+            <div id="active-students" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Active Students</h2>
+                    <!--div class="action-buttons">
+                        <span class="sender-outbound">SENDER OUTBOUND</span>
+                    </div-->
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-number" id="active-count">20</div>
+                        <div class="stat-label">Active Accounts</div>
+                    </div>
+                </div>
+
+                <div class="student-list" id="active-list">
+                    <!-- Active students will be populated here -->
+                </div>
+            </div>
+
+            <!-- Inactive Students Section -->
+            <div id="inactive-students" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Inactive Students</h2>
+                    <!--div class="action-buttons">
+                        <span class="sender-outbound">SENDER OUTBOUND</span>
+                    </div-->
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-number" id="inactive-count">15</div>
+                        <div class="stat-label">Inactive Students</div>
+                    </div>
+                </div>
+
+                <div class="student-list" id="inactive-list">
+                    <!-- Inactive students will be populated here -->
+                </div>
+            </div>
+
+            <!-- Dormitory Allocation Section -->
+            <div id="dormitory-allocation" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Dormitory Allocation</h2>
+                </div>
+
+                <div class="dormitory-section" id="dormitory-list">
+                    <!-- Dormitory allocation will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================
+        // VARIABLES SECTION - EASILY CUSTOMIZABLE
+        // ================================
+        
+        // Total counts
+        const TOTAL_REGISTERED = 120;
+        const MALE_COUNT = 72;
+        const FEMALE_COUNT = 48;
+        const ACTIVE_COUNT = 20;
+        const INACTIVE_COUNT = 15;
+
+        // Registered Students List
+        const REGISTERED_STUDENTS = [
+            { name: 'John Smith', program: 'Computer Science', gender: 'male' },
+            { name: 'Sarah Johnson', program: 'Engineering', gender: 'female' },
+            { name: 'Mike Davis', program: 'Business', gender: 'male' },
+            { name: 'Emily Wilson', program: 'Mathematics', gender: 'female' },
+            { name: 'James Brown', program: 'Physics', gender: 'male' }
+        ];
+
+        // Active Students List
+        const ACTIVE_STUDENTS = [
+            { name: 'Emily Wilson', status: 'Active' },
+            { name: 'James Brown', status: 'Active' },
+            { name: 'Lisa Garcia', status: 'Active' }
+        ];
+
+        // Inactive Students List
+        const INACTIVE_STUDENTS = [
+            { name: 'Alex Thompson', status: 'Inactive' },
+            { name: 'Maria Rodriguez', status: 'Inactive' },
+            { name: 'David Lee', status: 'Inactive' }
+        ];
+
+        // Subjects List
+        const SUBJECTS = [
+            { name: 'Mathematics' },
+            { name: 'Physics' },
+            { name: 'Chemistry' },
+            { name: 'Computer Science' },
+            { name: 'English Literature' },
+            { name: 'Biology' }
+        ];
+
+        // Dormitory Students List
+        const DORMITORY_STUDENTS = [
+            { name: 'John', surname: 'Smith', class: '2nd Year CS', hostel: null },
+            { name: 'Sarah', surname: 'Johnson', class: '1st Year Eng', hostel: 2 },
+            { name: 'Mike', surname: 'Davis', class: '3rd Year Bus', hostel: 1 },
+            { name: 'Emily', surname: 'Wilson', class: '2nd Year Math', hostel: null },
+            { name: 'James', surname: 'Brown', class: '1st Year Phy', hostel: 3 },
+            { name: 'Lisa', surname: 'Garcia', class: '2nd Year CS', hostel: null },
+            { name: 'Alex', surname: 'Thompson', class: '3rd Year Eng', hostel: 4 }
+        ];
+
+        // ================================
+        // INITIALIZATION AND RENDERING
+        // ================================
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCounts();
+            renderRegisteredStudents();
+            renderActiveStudents();
+            renderInactiveStudents();
+            renderSubjects();
+            renderDormitoryAllocation();
+            updatePieChart();
+        });
+
+        function updateCounts() {
+            document.getElementById('total-registered').textContent = TOTAL_REGISTERED;
+            document.getElementById('male-count').textContent = MALE_COUNT;
+            document.getElementById('female-count').textContent = FEMALE_COUNT;
+            document.getElementById('active-count').textContent = ACTIVE_COUNT;
+            document.getElementById('inactive-count').textContent = INACTIVE_COUNT;
+        }
+
+        function updatePieChart() {
+            const malePercentage = (MALE_COUNT / TOTAL_REGISTERED) * 100;
+            const maleDegrees = (malePercentage / 100) * 360;
+            
+            const pieChart = document.querySelector('.pie-chart');
+            pieChart.style.background = `conic-gradient(#3498db 0deg ${maleDegrees}deg, #e74c3c ${maleDegrees}deg 360deg)`;
+        }
+
+        function renderRegisteredStudents() {
+            const container = document.getElementById('registered-list');
+            container.innerHTML = REGISTERED_STUDENTS.map((student, index) => `
+                <div class="student-item">
+                    <div class="student-info">
+                        <div class="student-name">${student.name}</div>
+                        <div class="student-details">Program: ${student.program}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="removeStudent(${index})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function renderActiveStudents() {
+            const container = document.getElementById('active-list');
+            container.innerHTML = ACTIVE_STUDENTS.map((student, index) => `
+                <div class="student-item">
+                    <div class="student-info">
+                        <div class="student-name">${student.name}</div>
+                        <div class="student-details">Status: ${student.status}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deactivateStudent(${index})">Deactivate</button>
+                </div>
+            `).join('');
+        }
+
+        function renderInactiveStudents() {
+            const container = document.getElementById('inactive-list');
+            container.innerHTML = INACTIVE_STUDENTS.map((student, index) => `
+                <div class="student-item">
+                    <div class="student-info">
+                        <div class="student-name">${student.name}</div>
+                        <div class="student-details">Status: ${student.status}</div>
+                    </div>
+                    <button class="btn btn-success" onclick="reactivateStudent(${index})">Reactivate</button>
+                </div>
+            `).join('');
+        }
+
+        function renderSubjects() {
+            const container = document.getElementById('subject-grid');
+            container.innerHTML = SUBJECTS.map(subject => `
+                <div class="subject-card">
+                    <div class="subject-name">${subject.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderDormitoryAllocation() {
+            const container = document.getElementById('dormitory-list');
+            container.innerHTML = DORMITORY_STUDENTS.map((student, index) => `
+                <div class="dormitory-item">
+                    <div class="dormitory-student-info">
+                        <div class="student-name">${student.name} ${student.surname}</div>
+                        <div class="student-details">Class: ${student.class}</div>
+                    </div>
+                    <div class="hostel-controls">
+                        <div class="hostel-group">
+                            <div class="hostel-label">Hostel</div>
+                            <div class="hostel-buttons">
+                                <button class="hostel-btn ${student.hostel === 1 ? 'selected' : ''}" 
+                                        onclick="selectHostel(${index}, 1)">1</button>
+                                <button class="hostel-btn ${student.hostel === 2 ? 'selected' : ''}" 
+                                        onclick="selectHostel(${index}, 2)">2</button>
+                                <button class="hostel-btn ${student.hostel === 3 ? 'selected' : ''}" 
+                                        onclick="selectHostel(${index}, 3)">3</button>
+                                <button class="hostel-btn ${student.hostel === 4 ? 'selected' : ''}" 
+                                        onclick="selectHostel(${index}, 4)">4</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-danger deallocate-btn ${student.hostel ? '' : 'disabled'}" 
+                                onclick="deallocateStudent(${index})" 
+                                ${student.hostel ? '' : 'disabled'}>Deallocate</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ================================
+        // EVENT HANDLERS
+        // ================================
+
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update active tab
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logged out successfully!');
+                // Add actual logout logic here
+            }
+        }
+
+        function removeStudent(index) {
+            if (confirm('Are you sure you want to remove this student?')) {
+                REGISTERED_STUDENTS.splice(index, 1);
+                renderRegisteredStudents();
+                alert('Student removed successfully!');
+            }
+        }
+
+        function deactivateStudent(index) {
+            if (confirm('Are you sure you want to deactivate this student?')) {
+                alert('Student deactivated successfully!');
+            }
+        }
+
+        function reactivateStudent(index) {
+            alert('Student reactivated successfully!');
+        }
+
+        function selectHostel(index, hostelNumber) {
+            DORMITORY_STUDENTS[index].hostel = hostelNumber;
+            renderDormitoryAllocation();
+        }
+
+        function deallocateStudent(index) {
+            if (confirm('Are you sure you want to deallocate this student?')) {
+                DORMITORY_STUDENTS[index].hostel = null;
+                renderDormitoryAllocation();
+                alert('Student deallocated successfully!');
+            }
+        }
+
+        // Search functionality
+        document.getElementById('registered-search').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const studentItems = document.querySelectorAll('#registered-list .student-item');
+            
+            studentItems.forEach(item => {
+                const studentName = item.querySelector('.student-name').textContent.toLowerCase();
+                const studentDetails = item.querySelector('.student-details').textContent.toLowerCase();
+                
+                if (studentName.includes(searchTerm) || studentDetails.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Subject management buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.textContent === 'ADD') {
+                const subjectName = prompt('Enter subject name:');
+                if (subjectName) {
+                    SUBJECTS.push({ name: subjectName });
+                    renderSubjects();
+                    alert(`Subject "${subjectName}" added successfully!`);
+                }
+            }
+            
+            if (e.target.textContent === 'DELETE') {
+                alert('Select a subject to delete first.');
+            }
+        });
+    </script>
+</body>
+</html>
