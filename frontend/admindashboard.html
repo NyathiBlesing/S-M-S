@@ -11,17 +11,28 @@
             box-sizing: border-box;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Styrene+B:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        @font-face {
+        font-family: 'StyreneA';
+        src: url('./assets/fonts/StyreneA.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+        }
+
         
         body {
-            font-family: 'Styrene B', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'StyreneA', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+        }
+
+        div, p, button{
+            font-family: 'StyreneA', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .container {
             display: flex;
             min-height: 100vh;
+            font-family: 'StyreneA', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 1400px;
             margin: 0 auto;
             background: white;
@@ -32,6 +43,7 @@
             width: 280px;
             background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
             color: white;
+            font-family: 'StyreneA', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 20px 0;
             position: relative;
             display: flex;
@@ -127,10 +139,11 @@
             display: block;
         }
 
+        /*
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
+        }*/
 
         .welcome-section {
             text-align: center;
@@ -626,7 +639,7 @@
 
     <script>
         // ================================
-        // VARIABLES SECTION - EASILY CUSTOMIZABLE
+        // VARIABLES SECTION
         // ================================
         
         // Total counts
