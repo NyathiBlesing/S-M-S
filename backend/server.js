@@ -232,7 +232,7 @@ app.get('/me', async (req, res) => {
 
 // GET /subjects - mock subjects for now
 app.get('/subjects', (req, res) => {
-  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
+  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });  
 
   const sampleSubjects = [
     "📖 English", "🔢 Mathematics", "⚛️ Physics", "🧪 Chemistry", "💰 Economics"

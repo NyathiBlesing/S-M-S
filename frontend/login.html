@@ -237,8 +237,6 @@
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message);
-
             if (data.redirect) {
             window.location.href = data.redirect;
             } else {
