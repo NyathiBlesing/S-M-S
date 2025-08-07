@@ -83,22 +83,21 @@ app.post('/signup', async (req, res) => {
     dob,
     gender,
     address,
-    class: studentClass
+    class: studentClass,
+    selectedSubjects // This should be an array of subject names like ["Math", "English"]
   } = req.body;
 
   console.log(req.body);
 
-  // Validate required fields
-  if (!name || !surname || !email || !confirmEmail || !password || !confirmPassword || !phone || !dob || !gender || !address || !studentClass) {
+  // Validation
+  if (!name || !surname || !email || !confirmEmail || !password || !confirmPassword || !phone || !dob || !gender || !address || !studentClass || !selectedSubjects) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  // Validate email match
   if (email !== confirmEmail) {
     return res.status(400).json({ error: 'Emails do not match' });
   }
 
-  // Validate password match
   if (password !== confirmPassword) {
     return res.status(400).json({ error: 'Passwords do not match' });
   }
@@ -108,25 +107,46 @@ app.post('/signup', async (req, res) => {
   }
 
   try {
-    // Insert into database
-    const [result] = await db.execute(
+    // 1. Insert user into users table
+    const [userResult] = await db.execute(
       'INSERT INTO users (name, surname, email, password, phone_number, date_of_birth, gender, address, class_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [name, surname, email, password, phone, dob, gender, address, studentClass]
     );
 
-    if (result.affectedRows === 1) {
-      return res.json({
-        message: 'User registered successfully',
-        redirect: '/login'
-      });
-    } else {
-      return res.status(500).json({ error: 'Insert failed' });
+    if (userResult.affectedRows !== 1) {
+      return res.status(500).json({ error: 'User insert failed' });
     }
+
+    const userId = userResult.insertId;
+
+    // 2. Get subject IDs from subject names
+    const placeholders = selectedSubjects.map(() => '?').join(', ');
+    const [subjectRows] = await db.execute(
+      `SELECT subject_id FROM subjects WHERE subject_name IN (${placeholders})`,
+      selectedSubjects
+    );
+
+    // 3. Insert into student_subjects (user_id, subject_id)
+    if (subjectRows.length > 0) {
+      const studentSubjectsValues = subjectRows.map(row => [userId, row.subject_id]);
+
+      await db.query(
+        'INSERT INTO student_subjects (user_id, subject_id) VALUES ?',
+        [studentSubjectsValues]
+      );
+    }
+
+    return res.json({
+      message: 'User registered successfully',
+      redirect: '/login'
+    });
+
   } catch (err) {
     console.error('DB Error:', err);
-    res.status(500).json({ error: 'Database error' });
+    return res.status(500).json({ error: 'Database error' });
   }
 });
+
 
 // POST /login - user login and session creation
 app.post('/login', async (req, res) => {
@@ -208,37 +228,71 @@ app.get('/me', async (req, res) => {
   }
 
   try {
-    const [rows] = await db.execute(
+    const userId = req.session.user.user_id;
+
+    // 1. Get user info
+    const [userRows] = await db.execute(
       `SELECT 
          name, surname, email, phone_number AS phone, 
          date_of_birth AS dob, gender, address, 
          class_id AS class, dormitory_id, status 
        FROM users 
        WHERE user_id = ?`,
-      [req.session.user.user_id]
+      [userId]
     );
 
-    if (rows.length === 1) {
-      return res.json(rows[0]);
-    } else {
+    if (userRows.length !== 1) {
       return res.status(404).json({ error: 'User not found' });
     }
+
+    const userData = userRows[0];
+
+    // 2. Get subjects for this user
+    const [subjectRows] = await db.execute(
+      `SELECT s.subject_name 
+       FROM student_subjects ss
+       JOIN subjects s ON ss.subject_id = s.subject_id
+       WHERE ss.user_id = ?`,
+      [userId]
+    );
+
+    const subjects = subjectRows.map(row => row.subject_name); // Array of subject names
+
+    // 3. Include subjects in response
+    return res.json({
+      ...userData,
+      subjects
+    });
+
   } catch (err) {
     console.error('Error fetching user profile:', err);
     return res.status(500).json({ error: 'Database error' });
   }
 });
 
+// 
 
-// GET /subjects - mock subjects for now
-app.get('/subjects', (req, res) => {
-  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });  
 
-  const sampleSubjects = [
-    "📖 English", "🔢 Mathematics", "⚛️ Physics", "🧪 Chemistry", "💰 Economics"
-  ];
-  res.json(sampleSubjects);
+// GET /subjects
+app.get('/subjects', async (req, res) => {
+  /*
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }*/
+
+  const sql = `
+    SELECT subject_name AS subject FROM subjects
+  `;
+
+  try {
+    const [rows] = await db.query(sql);
+    return res.json(rows); // Return after sending the response
+  } catch (err) {
+    console.error('Error fetching subjects:', err);
+    return res.status(500).json({ error: 'Database error' });
+  }
 });
+
 
 // GET /dormitory - example assigned hostel
 app.get('/dormitory', (req, res) => {

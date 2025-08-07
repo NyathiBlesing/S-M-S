@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Subject</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 2px solid #333;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin-right: 20px;
+        }
+
+        .back-button:hover {
+            background: #f0f0f0;
+            transform: translateX(-2px);
+        }
+
+        .back-arrow {
+            font-size: 16px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            font-size: 16px;
+            background: white;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: lowercase;
+            min-width: 100px;
+        }
+
+        .btn-cancel {
+            background: white;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-save {
+            background: #333;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #555;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button" onclick="goBack()">
+                <span class="back-arrow">←</span>
+                <span>back</span>
+            </button>
+            <h1 class="title">Add Subject</h1>
+        </div>
+
+        <form onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" placeholder="Enter subject name..." required>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" onclick="handleCancel()">cancel</button>
+                <button type="submit" class="btn btn-save">save</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                alert('No previous page to go back to!');
+            }
+        }
+
+        function handleCancel() {
+            const input = document.getElementById('subject');
+            input.value = '';
+            goBack();
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const subject = document.getElementById('subject').value;
+            if (subject.trim()) {
+                alert("Subject saved successfully!");
+                // Here you would typically send the data to a server
+                // For demo purposes, we'll just clear the form
+                document.getElementById('subject').value = '';
+            }
+        }
+
+        // Add some interactive feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('subject');
+            const saveBtn = document.querySelector('.btn-save');
+            
+            input.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    saveBtn.style.background = '#28a745';
+                } else {
+                    saveBtn.style.background = '#333';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

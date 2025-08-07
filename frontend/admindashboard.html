@@ -493,10 +493,10 @@
         <div class="sidebar">
             <h2>
                 <div class="system-icon"></div>
-                Student Management System
+                Marytechenock SMS
             </h2>
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showSection('welcome')">Welcome</button>
+                <button class="nav-tab active" onclick="showSection('welcome')">Dashboard</button>
                 <button class="nav-tab" onclick="showSection('registered-students')">Signed-up Students</button>
                 <button class="nav-tab" onclick="showSection('student-details')">Student Details Management</button>
                 <button class="nav-tab" onclick="showSection('subject-management')">Subject Management</button>
@@ -672,15 +672,37 @@
             { name: 'David Lee', status: 'Inactive' }
         ];
 
-        // Subjects List
-        const SUBJECTS = [
-            { name: 'Mathematics' },
-            { name: 'Physics' },
-            { name: 'Chemistry' },
-            { name: 'Computer Science' },
-            { name: 'English Literature' },
-            { name: 'Biology' }
-        ];
+        let SUBJECTS = [];
+
+        async function loadSubjects() {
+            try {
+                const response = await fetch('/subjects');
+                if (!response.ok) throw new Error('Failed to fetch subjects');
+
+                const data = await response.json();
+                SUBJECTS = data.map(item => ({ name: item.subject }));
+                console.log('Loaded subjects:', SUBJECTS);
+
+                renderSubjects(SUBJECTS);
+
+            } catch (error) {
+                console.error('Error loading subjects:', error);
+            }
+        }
+
+        function renderSubjects(subjects) {
+        const container = document.getElementById('subject-list');
+        container.innerHTML = ''; // clear previous
+
+        subjects.forEach(subject => {
+            const li = document.createElement('li');
+            li.textContent = subject.name;
+            container.appendChild(li);
+        });
+        }
+
+        loadSubjects();
+
 
         // Dormitory Students List
         const DORMITORY_STUDENTS = [

@@ -439,19 +439,7 @@
                 <label class="form-label">Subjects (Select up to 6)</label>
                 <div class="subjects-container">
                     <select class="subjects-dropdown" id="subjectsDropdown">
-                        <option value="">Select a subject to add...</option>
-                        <option value="Mathematics">Mathematics</option>
-                        <option value="Geography">Geography</option>
-                        <option value="History">History</option>
-                        <option value="Physics">Physics</option>
-                        <option value="Chemistry">Chemistry</option>
-                        <option value="Biology">Biology</option>
-                        <option value="English">English</option>
-                        <option value="Literature">Literature</option>
-                        <option value="Economics">Economics</option>
-                        <option value="Business Studies">Business Studies</option>
-                        <option value="Computer Science">Computer Science</option>
-                        <option value="Art">Art</option>
+                    <option value="">Select a subject to add...</option>
                     </select>
                     <div class="selected-subjects" id="selectedSubjects"></div>
                     <div class="subjects-limit" id="subjectsLimit">0/6 subjects selected</div>
@@ -599,5 +587,31 @@
       renderSelectedSubjects();
       updateDropdownOptions();
     </script>
+    <script>
+        async function populateSubjectDropdown() {
+        try {
+            const response = await fetch('/subjects');
+            if (!response.ok) throw new Error('Failed to fetch subjects');
+
+            const data = await response.json(); // e.g. [{ subject: 'Mathematics' }, ...]
+
+            const dropdown = document.getElementById('subjectsDropdown');
+
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.subject;
+                option.textContent = item.subject;
+                dropdown.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error('Error loading subjects:', error);
+        }
+        }
+
+        // Call function to populate on load
+        populateSubjectDropdown();
+    </script>
+
 </body>
 </html>

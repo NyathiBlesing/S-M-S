@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>George Silunika Student Management System</title>
+    <title>Student Management System</title>
     <style>
         * {
             margin: 0;
@@ -292,7 +292,7 @@
 <body>
     <div class="sidebar">
         <div class="sidebar-content">
-            <div class="system-title">George Silunika<br>Student Management System</div>
+            <div class="system-title">Marytechenock<br>Student Management System</div>
             <div class="nav-item active" onclick="showSection('dashboard')">
                 📊 Dashboard
             </div>
@@ -348,7 +348,7 @@
                 </div>
                 <div class="form-group">
                     <label for="dob">DOB:</label>
-                    <input type="date" id="dob" name="dob" value="2001-05-15" disabled>
+                    <input type="text" id="dob" name="dob" value="" disabled>
                 </div>
                 <div class="form-group">
                     <label for="gender">Gender:</label>
@@ -381,13 +381,8 @@
         <!-- Subjects Section -->
         <div id="subjects" class="content-section">
             <div class="section-title">Subjects Registered</div>
-            <div class="subjects-list">
+            <div class="subjects-list" id="subjects-list">
                 <h3>Your Registered Subjects:</h3>
-                <div class="subject-item">📖 English</div>
-                <div class="subject-item">🔢 Mathematics</div>
-                <div class="subject-item">⚛️ Physics</div>
-                <div class="subject-item">🧪 Chemistry</div>
-                <div class="subject-item">💰 Economics</div>
             </div>
         </div>
 
@@ -404,9 +399,6 @@
                     <div class="hostel-block hostel-assigned">Hostel 4</div>
                 </div>
                 
-                <div style="margin: 20px 0; color: #7f8c8d;">
-                    <p>Alternative state:</p>
-                </div>
                 <div class="dormitory-not-assigned">❌ Not Assigned</div>
             </div>
         </div>
@@ -462,21 +454,28 @@
       document.getElementById('surname').value = studentData.surname || '';
       document.getElementById('email').value = studentData.email || '';
       document.getElementById('phone').value = studentData.phone || '';
-      document.getElementById('dob').value = studentData.dob || '';
+      //date stuff
+        if (studentData.dob) {
+        const date = new Date(studentData.dob);
+
+        // Format to dd/mm/yyyy
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const year = date.getFullYear();
+
+        const formattedDob = `${day}/${month}/${year}`;
+        document.getElementById('dob').value = formattedDob;
+        } else {
+        document.getElementById('dob').value = '';
+        }
+      // ---------
       document.getElementById('gender').value = studentData.gender || '';
       document.getElementById('address').value = studentData.address || '';
       document.getElementById('class').value = studentData.class || '';
     }
 
     function updateSubjectsList() {
-      const container = document.querySelector('.subjects-list');
-      container.innerHTML = '<h3>Your Registered Subjects:</h3>';
-      subjectsList.forEach(subject => {
-        const div = document.createElement('div');
-        div.className = 'subject-item';
-        div.textContent = subject;
-        container.appendChild(div);
-      });
+        return;
     }
 
     function updateDormitoryDisplay() {
@@ -555,5 +554,45 @@
 
     document.addEventListener('DOMContentLoaded', fetchDashboardData);
   </script>
+    <script>
+    async function loadUserSubjects() {
+        console.log("hgfff");
+    try {
+        const response = await fetch('/me');
+        if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+        }
+
+        const userData = await response.json();
+
+        const subjects = userData.subjects || [];
+        const subjectsContainer = document.getElementById('subjects-list');
+
+        // Clear any existing subject items (except the title <h3>)
+        subjectsContainer.innerHTML = '<h3>Your Registered Subjects:</h3>';
+
+        if (subjects.length === 0) {
+        subjectsContainer.innerHTML += '<div class="subject-item">No subjects registered.</div>';
+        return;
+        }
+
+        // Append each subject as a <div>
+        subjects.forEach(subject => {
+        const div = document.createElement('div');
+        div.className = 'subject-item';
+        div.textContent = subject;
+        subjectsContainer.appendChild(div);
+        console.log(subject);
+        });
+
+    } catch (error) {
+        console.error('Error loading subjects:', error);
+    }
+    }
+
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(loadUserSubjects, 1500); // 500ms delay
+});
+    </script>
 </body>
 </html>
