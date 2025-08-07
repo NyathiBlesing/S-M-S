@@ -270,7 +270,13 @@ app.get('/me', async (req, res) => {
   }
 });
 
-// 
+// api for getting the add subject API
+app.get('/add-subject', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+  res.sendFile(path.join(__dirname, '../frontend/addsubject.html'));
+});
 
 
 // GET /subjects

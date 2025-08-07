@@ -572,7 +572,7 @@
                 <div class="section-header">
                     <h2 class="section-title">Subject Management</h2>
                     <div class="action-buttons">
-                        <button class="btn btn-success">ADD</button>
+                        <a href="/add-subject"><button class="btn btn-success">ADD</button></a>
                         <button class="btn btn-danger">DELETE</button>
                     </div>
                 </div>
@@ -666,11 +666,7 @@
         ];
 
         // Inactive Students List
-        const INACTIVE_STUDENTS = [
-            { name: 'Alex Thompson', status: 'Inactive' },
-            { name: 'Maria Rodriguez', status: 'Inactive' },
-            { name: 'David Lee', status: 'Inactive' }
-        ];
+        const INACTIVE_STUDENTS = [];
 
         let SUBJECTS = [];
 
@@ -688,6 +684,10 @@
             } catch (error) {
                 console.error('Error loading subjects:', error);
             }
+        }
+
+        async function loadInactives() {
+
         }
 
         function renderSubjects(subjects) {
@@ -800,7 +800,8 @@
                                 ${student.status}
                             </div>
                         </div>
-                        <button class="btn btn-danger" onclick="removeStudent(${index})">Remove</button>
+                        <button style="margin-right:10px;" class="btn btn-success" onclick="activateStudent(${index})">Approve</button>
+                        <button class="btn btn-danger" onclick="deactivateStudent(${index})">Deny</button>
                     </div>
                 `).join('');
             } catch (error) {
@@ -809,30 +810,79 @@
             }
         }
 
-        function renderActiveStudents() {
+        async function renderActiveStudents() {
             const container = document.getElementById('active-list');
-            container.innerHTML = ACTIVE_STUDENTS.map((student, index) => `
-                <div class="student-item">
-                    <div class="student-info">
-                        <div class="student-name">${student.name}</div>
-                        <div class="student-details">Status: ${student.status}</div>
+            container.innerHTML = '<p>Loading students...</p>';
+
+            try {
+                const response = await fetch('/students/active');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch students');
+                }
+
+                const students = await response.json();
+
+                if (students.length === 0) {
+                    container.innerHTML = '<p>No registered students found.</p>';
+                    return;
+                }
+
+                container.innerHTML = students.map((student, index) => `
+                    <div class="student-item">
+                        <div class="student-info">
+                            <div class="student-name">${student.name} ${student.surname}</div>
+                            <div class="student-details">
+                                ${student.gender} | 
+                                ${student.class_name || 'N/A'} | 
+                                ${student.dormitory_name || 'N/A'} | 
+                                ${student.status}
+                            </div>
+                        </div>
+                        <button class="btn btn-danger" onclick="deactivateStudent(${index})">Deactivate</button>
                     </div>
-                    <button class="btn btn-danger" onclick="deactivateStudent(${index})">Deactivate</button>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (error) {
+                console.error('Error loading students:', error);
+                container.innerHTML = '<p>Error loading students.</p>';
+            }
         }
 
-        function renderInactiveStudents() {
+        async function renderInactiveStudents() {
             const container = document.getElementById('inactive-list');
-            container.innerHTML = INACTIVE_STUDENTS.map((student, index) => `
-                <div class="student-item">
-                    <div class="student-info">
-                        <div class="student-name">${student.name}</div>
-                        <div class="student-details">Status: ${student.status}</div>
+            container.innerHTML = '<p>Loading students...</p>';
+
+            try {
+                const response = await fetch('/students/inactive');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch students');
+                }
+
+                const students = await response.json();
+
+                if (students.length === 0) {
+                    container.innerHTML = '<p>No registered students found.</p>';
+                    return;
+                }
+
+                container.innerHTML = students.map((student, index) => `
+                    <div class="student-item">
+                        <div class="student-info">
+                            <div class="student-name">${student.name} ${student.surname}</div>
+                            <div class="student-details">
+                                ${student.gender} | 
+                                ${student.class_name || 'N/A'} | 
+                                ${student.dormitory_name || 'N/A'} | 
+                                ${student.status}
+                            </div>
+                        </div>
+                        <button class="btn btn-success" onclick="activateStudent(${index})">Activate</button>
                     </div>
-                    <button class="btn btn-success" onclick="reactivateStudent(${index})">Reactivate</button>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (error) {
+                console.error('Error loading students:', error);
+                container.innerHTML = '<p>Error loading students.</p>';
+            }
+
         }
 
         function renderSubjects() {
@@ -924,8 +974,8 @@
             }
         }
 
-        function reactivateStudent(index) {
-            alert('Student reactivated successfully!');
+        function activateStudent(index) {
+            alert('Student activated successfully!');
         }
 
         function selectHostel(index, hostelNumber) {
@@ -960,14 +1010,7 @@
 
         // Subject management buttons
         document.addEventListener('click', function(e) {
-            if (e.target.textContent === 'ADD') {
-                const subjectName = prompt('Enter subject name:');
-                if (subjectName) {
-                    SUBJECTS.push({ name: subjectName });
-                    renderSubjects();
-                    alert(`Subject "${subjectName}" added successfully!`);
-                }
-            }
+
             
             if (e.target.textContent === 'DELETE') {
                 alert('Select a subject to delete first.');
