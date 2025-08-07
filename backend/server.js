@@ -308,7 +308,6 @@ app.get('/dormitory', (req, res) => {
   res.json({ assignedHostel });
 });
 
-// Add these routes BELOW your current imports and middleware
 
 // 1. Get all students (role='student')
 app.get('/students', async (req, res) => {
@@ -418,6 +417,28 @@ app.get('/dormitory', async (req, res) => {
     console.error('Error fetching dormitory students:', err);
     res.status(500).json({ error: 'Database error' });
   }
+});
+
+app.post('/submit-subject', (req, res) => {
+
+  const { subject } = req.body;
+
+  if (!subject || typeof subject !== 'string') {
+    return res.status(400).json({ message: 'Invalid subject' });
+  }
+
+  const insertQuery = 'INSERT INTO subjects (subject_name) VALUES (?)';
+
+  db.query(insertQuery, [subject], (err, results) => {
+    if (err) {
+      console.error('Database error while inserting subject:', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+    console.log("Subject to insert:", subject);
+
+
+return res.status(200).json({ message: 'Subject submitted successfully' });
+  });
 });
 
 

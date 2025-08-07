@@ -195,15 +195,29 @@
         }
 
         function handleSubmit(event) {
-            event.preventDefault();
-            const subject = document.getElementById('subject').value;
-            if (subject.trim()) {
-                alert("Subject saved successfully!");
-                // Here you would typically send the data to a server
-                // For demo purposes, we'll just clear the form
-                document.getElementById('subject').value = '';
-            }
+        event.preventDefault(); // prevent page reload
+
+        const subjectInput = document.getElementById('subject');
+        const subject = subjectInput.value.trim();
+
+        if (!subject) {
+            alert("Subject name cannot be empty.");
+            return;
         }
+
+        // Fire and forget POST request
+        fetch('/submit-subject', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ subject })
+        });
+
+        // Immediately redirect
+        window.location.href = '/';
+        }
+
 
         // Add some interactive feedback
         document.addEventListener('DOMContentLoaded', function() {
