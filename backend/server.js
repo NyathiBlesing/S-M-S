@@ -300,14 +300,6 @@ app.get('/subjects', async (req, res) => {
 });
 
 
-// GET /dormitory - example assigned hostel
-app.get('/dormitory', (req, res) => {
-  if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
-
-  const assignedHostel = 3; // later pull from DB if needed
-  res.json({ assignedHostel });
-});
-
 
 // 1. Get all students (role='student')
 app.get('/students', async (req, res) => {
@@ -403,10 +395,8 @@ app.get('/dormitory', async (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Not authenticated' });
 
   const sql = `
-    SELECT u.user_id, u.name, u.surname, c.class_name, d.dormitory_name 
+    SELECT u.user_id, u.name, u.surname, u.dormitory_id 
     FROM users u
-    LEFT JOIN dormitories d ON u.dormitory_id = d.dormitory_id
-    LEFT JOIN classes c ON u.class_id = c.class_id
     WHERE u.role = 'student'
   `;
 

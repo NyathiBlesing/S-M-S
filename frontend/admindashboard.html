@@ -705,15 +705,29 @@
 
 
         // Dormitory Students List
-        const DORMITORY_STUDENTS = [
-            { name: 'John', surname: 'Smith', class: '2nd Year CS', hostel: null },
-            { name: 'Sarah', surname: 'Johnson', class: '1st Year Eng', hostel: 2 },
-            { name: 'Mike', surname: 'Davis', class: '3rd Year Bus', hostel: 1 },
-            { name: 'Emily', surname: 'Wilson', class: '2nd Year Math', hostel: null },
-            { name: 'James', surname: 'Brown', class: '1st Year Phy', hostel: 3 },
-            { name: 'Lisa', surname: 'Garcia', class: '2nd Year CS', hostel: null },
-            { name: 'Alex', surname: 'Thompson', class: '3rd Year Eng', hostel: 4 }
-        ];
+        let DORMITORY_STUDENTS = [];
+
+        async function loadDormitoryStudents() {
+            try {
+                const response = await fetch('/dormitory');
+                if (!response.ok) throw new Error('Failed to fetch dormitory data');
+
+                const apiData = await response.json();
+
+                DORMITORY_STUDENTS = apiData.map(student => ({
+                    name: student.name,
+                    surname: student.surname,
+                    hostel: student.dormitory_id
+                }));
+
+                console.table(DORMITORY_STUDENTS); // You can now use this dynamically filled array
+                renderDormitoryAllocation();
+
+            } catch (error) {
+                console.error('Error loading dormitory students:', error);
+            }
+        }
+        loadDormitoryStudents();
 
         //----------------------------------------------------------------------------------------------------------------------------
         
@@ -900,7 +914,6 @@
                 <div class="dormitory-item">
                     <div class="dormitory-student-info">
                         <div class="student-name">${student.name} ${student.surname}</div>
-                        <div class="student-details">Class: ${student.class}</div>
                     </div>
                     <div class="hostel-controls">
                         <div class="hostel-group">
@@ -917,7 +930,7 @@
                             </div>
                         </div>
                         <button class="btn btn-danger deallocate-btn ${student.hostel ? '' : 'disabled'}" 
-                                onclick="deallocateStudent(${index})" 
+                                onclick="deallocateStudent(${student.user_id, index})" 
                                 ${student.hostel ? '' : 'disabled'}>Deallocate</button>
                     </div>
                 </div>
@@ -983,11 +996,14 @@
             renderDormitoryAllocation();
         }
 
-        function deallocateStudent(index) {
+        function deallocateStudent(student_id, index) {
             if (confirm('Are you sure you want to deallocate this student?')) {
                 DORMITORY_STUDENTS[index].hostel = null;
+
+                // db code for dormitory = null
+                // use student_id
+
                 renderDormitoryAllocation();
-                alert('Student deallocated successfully!');
             }
         }
 
