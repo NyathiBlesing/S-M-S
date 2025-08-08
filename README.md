@@ -29,6 +29,7 @@ Then this is the Admin Dashboard. This is where the Admin see all signed up stud
 
 <img width="600" height="500" alt="05" src="https://github.com/user-attachments/assets/1067848d-0101-4ff1-bf75-68cdbf6ad797" />
 
+
 Tech stack used:
 
 Front end: HTML, CSS, and JavaScript
@@ -40,14 +41,19 @@ Database: MySQL
 Environment Requirements
 
 The following components are needed:
-1.Node.js for the backend
 
-2.XAMPP (including Apache and MySQL) for the database
+ 1.Node.js for the backend
+
+ 2.XAMPP (including Apache and MySQL) for the database
 
 Setup & Run Instructions
+
 1. Start the services in XAMPP by launching MySQL and Apache using the XAMPP control panel.
+   
 2.Navigate to your project directory by opening Git Bash or your command-line interface and change to the Student Management System directory.
+
 3.Start the server by running the command npm run dev. This will start the server.
+
 4.Open the application in your browser, go to http://localhost:5000. You should be directed to the login page.
 
 Login Details:
