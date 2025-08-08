@@ -1,6 +1,6 @@
 This is a Student Management System that allows students to register by capturing all their details. It supports subject registration, dormitory management, and includes a functional login system that allows both administrators and students to log in. This is the Login page:
 
-<img width="1300" height="600" alt="00" src="https://github.com/user-attachments/assets/a66a6df3-d929-4a7b-b271-d973fab6f007" />
+<img width="600" height="500" alt="00" src="https://github.com/user-attachments/assets/a66a6df3-d929-4a7b-b271-d973fab6f007" />
 
 When Student Dont have an account this is where they sign up and register:
 
