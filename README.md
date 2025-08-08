@@ -6,7 +6,7 @@ When Student Dont have an account this is where they sign up and register:
 
 <img width="600" height="600" alt="01" src="https://github.com/user-attachments/assets/f333d2cd-51f8-46c4-a31c-18c177fda846" />
 
-Once the student is regestrered it takes them to the Student Dashboard. This is where the students see their details, regestration status, subjects regestered, and the dorm allocated.
+Once the student is regestrered, they sign in and it takes them to the Student Dashboard. This is where the students see their details, regestration status, subjects regestered, and the dorm allocated.
 
 <img width="600" height="500" alt="1 1" src="https://github.com/user-attachments/assets/f89ca29a-0d2c-4e05-9491-413091524724" />
 
@@ -18,7 +18,8 @@ Once the student is regestrered it takes them to the Student Dashboard. This is 
 
 <img width="600" height="500" alt="1 5" src="https://github.com/user-attachments/assets/04e73c4b-0cad-498b-96e4-77d763d879bd" />
 
-Then this is the Admin Dashboard where thet see all signed up students, student details, subject management, active and inactive students accounts and domitory allocation:
+
+Then this is the Admin Dashboard. This is where the Admin see all signed up students, their details, subject management, active and inactive students and domitory allocation:
 
 <img width="600" height="500" alt="02" src="https://github.com/user-attachments/assets/80b4eb04-652a-48da-aaa1-7b00d4d8ce12" />
 
