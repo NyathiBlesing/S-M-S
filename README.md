@@ -1,4 +1,4 @@
-This is a Student Management System that allows students to register by capturing all their details. It supports subject registration, dormitory management, and includes a functional login system that allows both administrators and students to log in. This is the Login page:
+This is a Student Management System that allows students to register by capturing all their details. It supports subject registration, dormitory management, and includes a functional login system that allows both administrators and students to log in (Role Based Access). This is the Login page:
 
 <img width="600" height="450" alt="00" src="https://github.com/user-attachments/assets/a66a6df3-d929-4a7b-b271-d973fab6f007" />
 
@@ -28,6 +28,13 @@ Then this is the Admin Dashboard. This is where the Admin see all signed up stud
 <img width="600" height="500" alt="03" src="https://github.com/user-attachments/assets/67c27466-175d-483d-96c5-64bbb8d93c68" />
 
 <img width="600" height="500" alt="05" src="https://github.com/user-attachments/assets/1067848d-0101-4ff1-bf75-68cdbf6ad797" />
+
+Tech stack used:
+Front end: HTML, CSS, and JavaScript
+Backend: Node.js with the Express.js framework
+Database: MySQL
+
+
 
 
 
