@@ -4,11 +4,11 @@ This is a Student Management System that allows students to register by capturin
 
 When Student Dont have an account this is where they sign up and register:
 
-<img width="500" height="614" alt="01" src="https://github.com/user-attachments/assets/f333d2cd-51f8-46c4-a31c-18c177fda846" />
+<img width="600" height="614" alt="01" src="https://github.com/user-attachments/assets/f333d2cd-51f8-46c4-a31c-18c177fda846" />
 
 Once the student is regestrered it takes them to the Student Dashboard. This is where the students see their details, regestration status, subjects regestered, and the dorm allocated.
 
-<img width="1300" height="600" alt="1 1" src="https://github.com/user-attachments/assets/f89ca29a-0d2c-4e05-9491-413091524724" />
+<img width="600" height="500" alt="1 1" src="https://github.com/user-attachments/assets/f89ca29a-0d2c-4e05-9491-413091524724" />
 
 <img width="1300" height="600" alt="1 2" src="https://github.com/user-attachments/assets/82543f2b-fb09-4b71-8700-999a8a78bfb6" />
 
