@@ -38,18 +38,16 @@ Backend: Node.js with the Express.js framework
 Database: MySQL
 
 Environment Requirements
+
 The following components are needed:
+1.Node.js for the backend
 
-Node.js for the backend
-
-XAMPP (including Apache and MySQL) for the database
+2.XAMPP (including Apache and MySQL) for the database
 
 Setup & Run Instructions
 1. Start the services in XAMPP by launching MySQL and Apache using the XAMPP control panel.
 2.Navigate to your project directory by opening Git Bash or your command-line interface and change to the Student Management System directory.
-
 3.Start the server by running the command npm run dev. This will start the server.
-
 4.Open the application in your browser, go to http://localhost:5000. You should be directed to the login page.
 
 Login Details:
