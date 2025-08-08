@@ -1,4 +1,6 @@
-This is a Student Management System that allows students to register by capturing all their details. It supports subject registration, dormitory management, and includes a functional login system that allows both administrators and students to log in (Role Based Access). This is the Login page:
+# Student Management System 
+
+This system allows students to register by capturing all their details. It supports subject registration, dormitory management, and includes a functional login system that allows both administrators and students to log in (Role Based Access). This is the Login page:
 
 <img width="600" height="450" alt="00" src="https://github.com/user-attachments/assets/a66a6df3-d929-4a7b-b271-d973fab6f007" />
 
@@ -30,23 +32,23 @@ Then this is the Admin Dashboard. This is where the Admin see all signed up stud
 <img width="600" height="500" alt="05" src="https://github.com/user-attachments/assets/1067848d-0101-4ff1-bf75-68cdbf6ad797" />
 
 
-#Tech stack used:
+## Tech stack used:
 
-## Front end: HTML, CSS, and JavaScript
+Front end: HTML, CSS, and JavaScript
 
-## Backend: Node.js with the Express.js framework
+Backend: Node.js with the Express.js framework
 
-## Database: MySQL
+Database: MySQL
 
-# Environment Requirements
+## Environment Requirements
 
-## The following components are needed:
+The following components are needed:
 
 -Node.js for the backend
 
 -XAMPP (including Apache and MySQL) for the database
 
-# Setup & Run Instructions
+## Setup & Run Instructions
 
 -Start the services in XAMPP by launching MySQL and Apache using the XAMPP control panel.
    
@@ -56,7 +58,7 @@ Then this is the Admin Dashboard. This is where the Admin see all signed up stud
 
 -Open the application in your browser, go to http://localhost:5000. You should be directed to the login page.
 
-# Login Details:
+## Login Details:
 
 For the Admin: email: mutsa@marytechenock.com Password: Mutsa123#
 
