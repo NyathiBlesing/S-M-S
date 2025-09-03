@@ -1,4 +1,4 @@
-<script>
+
     async function handleLoginClick() {
         const form = document.getElementById('loginForm');
         const email = form.email.value.trim();
@@ -36,9 +36,9 @@
         console.error(error);
         }
     }
-    </script>
 
-    <script>
+
+    
         // Add subtle hover effects to form inputs
         const inputs = document.querySelectorAll('.form-input');
         inputs.forEach(input => {
@@ -50,4 +50,3 @@
                 this.parentElement.style.transform = 'translateY(0)';
             });
         });
-    </script>
