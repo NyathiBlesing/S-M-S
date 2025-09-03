@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Your App</title>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="assets/images/logo_.png" alt="Logo" class="logo-image">
+            <div class="logo-text">Marytechenock Student Management System</div>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    placeholder="Enter your email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input" 
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="login-button" onclick="handleLoginClick()">
+                Sign In
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>or continue with</span>
+        </div>
+
+        <div style="text-align: center; color: #888; font-size: 14px;">
+            Don't have an account? 
+            <a href="/signup" style="color: #667eea; text-decoration: none; font-weight: 500;">Sign up</a>
+        </div>
+    </div>
+</body>
+</html>
